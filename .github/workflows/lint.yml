@@ -1,0 +1,25 @@
+name: Lint
+
+on: pull_request
+
+jobs:
+  lint:
+    name: Style & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install ruff and codespell
+        run: pip install ruff codespell
+
+      - name: Run Ruff
+        run: ruff check utils/ tests/
+
+      - name: Run Codespell
+        run: codespell utils/ tests/
