@@ -1,8 +1,6 @@
 """Tests for utils.plotting (layout helpers that don't require a display)."""
 
 import networkx as nx
-import numpy as np
-import pytest
 
 from utils.plotting import setup_graph_layout
 

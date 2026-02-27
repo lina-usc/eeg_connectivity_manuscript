@@ -1,10 +1,8 @@
 """Tests for utils.experimental (pure-Python functions only)."""
 
 import numpy as np
-import pytest
 
 from utils.experimental import bootstrap_ci, outlier_indices, remove_outliers
-
 
 # ---------------------------------------------------------------------------
 # outlier_indices

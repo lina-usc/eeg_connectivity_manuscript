@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from utils.constants import comparison_pairs, confounder_list
+from utils.constants import confounder_list
 from utils.statistics import build_ci_dataframe, compute_bootstrap_mse_corr, compute_ci_dict
 
 
