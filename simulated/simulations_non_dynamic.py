@@ -4,6 +4,7 @@
 import time
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 from utils.constants import (
     all_methods, comparison_pairs, confounder_list,
@@ -12,7 +13,7 @@ from utils.constants import (
 from utils.plotting import (
     draw_confounder_network, plot_bar_from_dict, setup_graph_layout,
 )
-from utils.simulation import estimate_connectivity, get_ground_truth_dict
+from utils.simulation import estimate_connectivity
 from utils.statistics import (
     build_ci_dataframe, compute_bootstrap_mse_corr, compute_ci_dict,
 )
@@ -20,6 +21,7 @@ from utils.statistics import (
 
 # ### COMPILING ESTIMATE AND GROUND-TRUTH DICTIONARIES
 
+np.random.seed(42)
 start_time = time.time()
 
 overall_estimate_dict = {}
@@ -46,14 +48,11 @@ for confounder in confounder_list:
             ground_truth_list = []
 
             for r in range(100):
-                estimated_matrix = estimate_connectivity(method, confounder)
+                estimated_matrix, ground_truth_matrix = estimate_connectivity(method, confounder)
                 estimate_list.append(estimated_matrix[i][j])
+                ground_truth_list.append(ground_truth_matrix[i][j])
 
-                ground_truth_matrix = get_ground_truth_dict()[confounder]
-                ground_truth = ground_truth_matrix[i][j]
-                ground_truth_list.append(ground_truth)
-
-            label = ("zero" if ground_truth == 0 else "non-zero") + f"_{i}_{j}"
+            label = ("zero" if ground_truth_matrix[i][j] == 0 else "non-zero") + f"_{i}_{j}"
             estimate_dict[label] = estimate_list
             ground_truth_dict[label] = ground_truth_list
 

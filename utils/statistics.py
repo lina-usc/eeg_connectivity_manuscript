@@ -26,7 +26,6 @@ def compute_bootstrap_mse_corr(overall_estimate_dict, overall_ground_truth_dict,
                     bootstrap_estimates = estimates[index]
 
                     ground_truth = np.array(overall_ground_truth_dict[confounder][method][connection])
-                    index = np.random.choice(range(100), 100, replace=True)
                     bootstrap_ground = ground_truth[index]
 
                     mse_list.append(np.sum((bootstrap_estimates - bootstrap_ground) ** 2) / 100)

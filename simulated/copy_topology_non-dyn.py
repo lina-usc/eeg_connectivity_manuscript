@@ -8,7 +8,7 @@ import numpy as np
 from utils.constants import (
     all_methods, confounder_list, directed_methods, undirected_methods,
 )
-from utils.simulation import estimate_connectivity, get_ground_truth_dict
+from utils.simulation import estimate_connectivity
 
 
 # ### COMPILING EDGE LISTS
@@ -19,7 +19,7 @@ for confounder in confounder_list:
     for method in undirected_methods:
         edges_list = []
         for i in range(100):
-            con_mat_normalized = estimate_connectivity(method, confounder)
+            con_mat_normalized, _ = estimate_connectivity(method, confounder)
             edges = [
                 round(con_mat_normalized[1][0], 2),
                 round(con_mat_normalized[2][1], 2),
