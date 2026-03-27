@@ -59,6 +59,18 @@ Simulated three-node networks (100 s, 250 Hz, sinusoidal signals with additive n
 
 Real EEG analyses use the [MPI-LEMON](https://fcon_1000.projects.nitrc.org/indi/retro/MPI_LEMON.html) resting-state dataset (Eyes Closed and Eyes Open conditions). Source-space connectivity is computed using sLORETA inverse solutions and parcellated using the Desikan-Killiany atlas.
 
+## Installation
+
+Clone the repository and install the package in editable mode:
+
+```bash
+git clone <repo-url>
+cd eeg_connectivity_manuscript
+pip install -e .
+```
+
+This registers the `utils` package so that all scripts can be run from any directory without import errors.
+
 ## Dependencies
 
 - [MNE-Python](https://mne.tools/)
