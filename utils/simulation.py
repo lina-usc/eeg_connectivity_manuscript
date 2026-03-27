@@ -46,14 +46,23 @@ def simulate_confounder(confounder, dynamic=False):
     snr1 = 1 / alpha1
     snr2 = 1 / alpha2
 
-    c_2_0 = get_ground_truth_dict()[confounder][2][0]
-    c_2_1 = get_ground_truth_dict()[confounder][2][1]
-    c_0_1 = get_ground_truth_dict()[confounder][1][0]
+    ground_truth = get_ground_truth_dict()[confounder]
+    c_2_0 = ground_truth[2][0]
+    c_2_1 = ground_truth[2][1]
+    c_0_1 = ground_truth[1][0]
 
     if dynamic:
         rho0 = round(random.uniform(0.5, 1.0), 2)
         rho1 = round(random.uniform(0.5, 1.0), 2)
         rho2 = round(random.uniform(0.5, 1.0), 2)
+
+        phase_2_0 = np.random.uniform(0, 2) * np.pi
+        phase_2_1 = np.random.uniform(0, 2) * np.pi
+        phase_0_1 = np.random.uniform(0, 2) * np.pi
+
+        lag2_0 = max(1, np.int64(np.round(phase_2_0 / (2 * np.pi * f0) * f0)))
+        lag2_1 = max(1, np.int64(np.round(phase_2_1 / (2 * np.pi * f1) * f1)))
+        lag0_1 = max(1, np.int64(np.round(phase_0_1 / (2 * np.pi * f0) * f0)))
 
         y0 = np.zeros(len(time))
         y1 = np.zeros(len(time))
@@ -61,8 +70,8 @@ def simulate_confounder(confounder, dynamic=False):
 
         for i in np.arange(2, len(time)):
             y2[i] = rho2 * y2[i-1] - (rho2 ** 2) * y2[i-2] + noise2[i] * snr2
-            y0[i] = rho0 * y0[i-1] - (rho0 ** 2) * y0[i-2] - c_2_0 * y2[i-1] + noise0[i] * snr0
-            y1[i] = rho1 * y1[i-1] - (rho1 ** 2) * y1[i-2] - c_0_1 * y0[i-3] - c_2_1 * y2[i-2] + noise1[i] * snr1
+            y0[i] = rho0 * y0[i-1] - (rho0 ** 2) * y0[i-2] - c_2_0 * y2[i-lag2_0] + noise0[i] * snr0
+            y1[i] = rho1 * y1[i-1] - (rho1 ** 2) * y1[i-2] - c_0_1 * y0[i-lag0_1] - c_2_1 * y2[i-lag2_1] + noise1[i] * snr1
     else:
         signal0 = np.sin(2 * np.pi * f0 * time)
         signal1 = np.sin(2 * np.pi * f1 * time)
@@ -86,7 +95,7 @@ def simulate_confounder(confounder, dynamic=False):
         L = np.identity(3)
 
     z0, z1, z2 = L @ np.array([y0, y1, y2])
-    return {"f0": f0, "f1": f1, "f2": f2, "signals": [z0, z1, z2]}
+    return {"f0": f0, "f1": f1, "f2": f2, "signals": [z0, z1, z2], "ground_truth": ground_truth}
 
 
 def make_mne_raw(signals):
@@ -101,6 +110,7 @@ def normalize(mat):
 
 def estimate_connectivity(method, confounder, dynamic=False):
     confounder_simulated = simulate_confounder(confounder, dynamic=dynamic)
+    ground_truth = confounder_simulated["ground_truth"]
     f0 = confounder_simulated["f0"]
     f1 = confounder_simulated["f1"]
     f2 = confounder_simulated["f2"]
@@ -115,13 +125,13 @@ def estimate_connectivity(method, confounder, dynamic=False):
 
         if dynamic:
             con_mat = np.nan_to_num(con.squeeze())[1:41].transpose(1, 2, 0)
-            return normalize(con_mat).mean(axis=2)
+            return normalize(con_mat).mean(axis=2), ground_truth
         else:
             f0_con = np.nan_to_num(con.squeeze())[f0-delta:f0+delta].transpose(1, 2, 0)
             f1_con = np.nan_to_num(con.squeeze())[f1-delta:f1+delta].transpose(1, 2, 0)
             f2_con = np.nan_to_num(con.squeeze())[f2-delta:f2+delta].transpose(1, 2, 0)
             con_mat = np.array([f0_con, f1_con, f2_con])
-            return normalize(con_mat).mean(axis=3).mean(axis=2)
+            return normalize(con_mat).mean(axis=3).mean(axis=2), ground_truth
     else:
         if dynamic:
             mne_con = spectral_connectivity_epochs(
@@ -135,4 +145,4 @@ def estimate_connectivity(method, confounder, dynamic=False):
                 fskip=0, faverage=True, mt_low_bias=True, block_size=1000, n_jobs=1, verbose=None)
 
         con_mat = mne_con.get_data(output="dense")
-        return normalize(con_mat).mean(2)
+        return normalize(con_mat).mean(2), ground_truth

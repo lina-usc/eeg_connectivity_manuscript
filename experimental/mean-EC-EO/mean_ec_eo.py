@@ -85,14 +85,13 @@ print(ci_dict)
 
 # ERROR BARS FOR GRAPHING
 
-graph_ci_eo_dict = {
-    method: error_bars(means_dict_eo[method])[1] - error_bars(means_dict_eo[method])[0]
-    for method in methods
-}
-graph_ci_ec_dict = {
-    method: error_bars(means_dict_ec[method])[1] - error_bars(means_dict_ec[method])[0]
-    for method in methods
-}
+graph_ci_eo_dict = {}
+graph_ci_ec_dict = {}
+for method in methods:
+    lo, hi = error_bars(means_dict_eo[method])
+    graph_ci_eo_dict[method] = hi - lo
+    lo, hi = error_bars(means_dict_ec[method])
+    graph_ci_ec_dict[method] = hi - lo
 
 
 # GRAPHING
