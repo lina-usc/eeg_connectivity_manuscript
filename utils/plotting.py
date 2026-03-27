@@ -1,7 +1,6 @@
 import networkx as nx
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 
 def plot_bar_from_dict(confounder, axes_cell, values_dict, node_key, methods_list, xticklabels, title):
