@@ -29,7 +29,8 @@ def compute_bootstrap_mse_corr(overall_estimate_dict, overall_ground_truth_dict,
                     bootstrap_ground = ground_truth[index]
 
                     mse_list.append(np.sum((bootstrap_estimates - bootstrap_ground) ** 2) / 100)
-                    corr_coef_list.append(scipy.stats.spearmanr(bootstrap_estimates, bootstrap_ground)[0])
+                    corr = scipy.stats.spearmanr(bootstrap_estimates, bootstrap_ground)[0]
+                    corr_coef_list.append(0.0 if np.isnan(corr) else corr)
 
                 connection_mse_dict[connection] = mse_list
                 connection_corr_dict[connection] = corr_coef_list

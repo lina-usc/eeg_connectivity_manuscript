@@ -4,9 +4,14 @@
 # In[2]:
 
 
+import pathlib
+
+import networkx as nx
 import numpy as np
 from matplotlib import pyplot as plt
-import networkx as nx
+
+FIGURES_DIR = pathlib.Path(__file__).parent.parent / "figures"
+FIGURES_DIR.mkdir(exist_ok=True)
 
 
 fig, axes = plt.subplots(1, 3, figsize=(12, 3))
@@ -86,4 +91,3 @@ nx.draw_networkx_labels(G, pos, ax=axes[2], labels=latex_labels)
 axes[2].set_title("Volume conduction", fontsize=12, fontweight="bold")
 
 plt.savefig("figures/confounders_fig.png", dpi=300)
-

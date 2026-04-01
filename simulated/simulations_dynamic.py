@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import pathlib
+import pickle
 import time
 
 import matplotlib.pyplot as plt
@@ -18,58 +20,74 @@ from utils.statistics import (
     build_ci_dataframe, compute_bootstrap_mse_corr, compute_ci_dict,
 )
 
+ROOT = pathlib.Path(__file__).parent.parent
+FIGURES_DIR = ROOT / "figures"
+FIGURES_DIR.mkdir(exist_ok=True)
+CACHE_FILE = ROOT / "cache" / "simulations_dynamic.pkl"
+CACHE_FILE.parent.mkdir(exist_ok=True)
+
 
 # ### COMPILING ESTIMATE AND GROUND-TRUTH DICTIONARIES
 
 np.random.seed(42)
-start_time = time.time()
 
-overall_estimate_dict = {}
-overall_ground_truth_dict = {}
+if CACHE_FILE.exists():
+    print("Loading cached simulation results...")
+    with open(CACHE_FILE, "rb") as f:
+        overall_estimate_dict, overall_ground_truth_dict, mse_dict, corr_coef_dict = pickle.load(f)
+else:
+    start_time = time.time()
 
-for confounder in confounder_list:
+    overall_estimate_dict = {}
+    overall_ground_truth_dict = {}
 
-    confounder_estimate_dict = {}
-    confounder_ground_truth_dict = {}
+    for confounder in confounder_list:
 
-    for method in all_methods:
+        confounder_estimate_dict = {}
+        confounder_ground_truth_dict = {}
 
-        estimate_dict = {}
-        ground_truth_dict = {}
+        for method in all_methods:
 
-        if method in undirected_methods:
-            matrix_indices = list(zip([1, 2, 2], [0, 0, 1]))
-        else:
-            matrix_indices = list(zip([1, 2, 2, 0, 0, 1], [0, 0, 1, 1, 2, 2]))
+            estimate_dict = {}
+            ground_truth_dict = {}
 
-        for i, j in matrix_indices:
+            if method in undirected_methods:
+                matrix_indices = list(zip([1, 2, 2], [0, 0, 1]))
+            else:
+                matrix_indices = list(zip([1, 2, 2, 0, 0, 1], [0, 0, 1, 1, 2, 2]))
 
-            estimate_list = []
-            ground_truth_list = []
+            for i, j in matrix_indices:
 
-            for r in range(100):
-                estimated_matrix, ground_truth_matrix = estimate_connectivity(method, confounder, dynamic=True)
-                estimate_list.append(estimated_matrix[i][j])
-                ground_truth_list.append(ground_truth_matrix[i][j])
+                estimate_list = []
+                ground_truth_list = []
 
-            label = ("zero" if ground_truth_matrix[i][j] == 0 else "non-zero") + f"_{i}_{j}"
-            estimate_dict[label] = estimate_list
-            ground_truth_dict[label] = ground_truth_list
+                for r in range(100):
+                    estimated_matrix, ground_truth_matrix = estimate_connectivity(method, confounder, dynamic=True)
+                    estimate_list.append(estimated_matrix[i][j])
+                    ground_truth_list.append(ground_truth_matrix[i][j])
 
-        confounder_estimate_dict[method] = estimate_dict
-        confounder_ground_truth_dict[method] = ground_truth_dict
+                label = ("zero" if ground_truth_matrix[i][j] == 0 else "non-zero") + f"_{i}_{j}"
+                estimate_dict[label] = estimate_list
+                ground_truth_dict[label] = ground_truth_list
 
-    overall_estimate_dict[confounder] = confounder_estimate_dict
-    overall_ground_truth_dict[confounder] = confounder_ground_truth_dict
+            confounder_estimate_dict[method] = estimate_dict
+            confounder_ground_truth_dict[method] = ground_truth_dict
 
-print(time.time() - start_time)
+        overall_estimate_dict[confounder] = confounder_estimate_dict
+        overall_ground_truth_dict[confounder] = confounder_ground_truth_dict
 
+    print(time.time() - start_time)
 
-# ## CALCULATING MSE AND CORR_COEF
+    # ## CALCULATING MSE AND CORR_COEF
 
-mse_dict, corr_coef_dict = compute_bootstrap_mse_corr(
-    overall_estimate_dict, overall_ground_truth_dict, confounder_list, all_methods
-)
+    mse_dict, corr_coef_dict = compute_bootstrap_mse_corr(
+        overall_estimate_dict, overall_ground_truth_dict, confounder_list, all_methods
+    )
+
+    with open(CACHE_FILE, "wb") as f:
+        pickle.dump(
+            (overall_estimate_dict, overall_ground_truth_dict, mse_dict, corr_coef_dict), f
+        )
 
 
 # ## GRAPHS - MSE (FUNCTIONAL)
@@ -117,7 +135,7 @@ plot_bar_from_dict("volume_conduction", axes[3][2], mse_dict, "zero_2_1",
 fig.supylabel("Mean-squared error (MSE)", fontsize=12, fontweight="bold")
 fig.suptitle("          Dynamic system", fontweight="bold", fontsize=14)
 fig.tight_layout()
-plt.savefig("/scratch/figures/mse_func_dyn.png", dpi=300)
+plt.savefig(FIGURES_DIR / "mse_func_dyn.png", dpi=300)
 
 
 # ## GRAPHS - MSE (EFFECTIVE)
@@ -186,7 +204,7 @@ plot_bar_from_dict("volume_conduction", axes[6][2], mse_dict, 'zero_2_1',
 fig.suptitle("          Dynamic system \n", fontweight="bold", fontsize=14)
 fig.supylabel("Mean-squared error (MSE)", fontsize=12, fontweight="bold")
 fig.tight_layout()
-plt.savefig("/scratch/figures/mse_eff_dyn.png", dpi=300)
+plt.savefig(FIGURES_DIR / "mse_eff_dyn.png", dpi=300)
 
 
 # ## GRAPHS - CORR COEF (FUNCTIONAL)
@@ -215,7 +233,7 @@ axes[4].set_ylabel('Volume conduction', rotation='horizontal', fontsize=10, loc=
 
 fig.suptitle("                            Dynamic system", fontweight="bold", fontsize=14)
 fig.tight_layout()
-plt.savefig("/scratch/figures/corr_func_dyn.png", dpi=300)
+plt.savefig(FIGURES_DIR / "corr_func_dyn.png", dpi=300)
 
 
 # ## GRAPHS - CORR COEF (EFFECTIVE)
@@ -244,7 +262,7 @@ axes[4].set_ylabel('Volume conduction', rotation='horizontal', fontsize=10, loc=
 
 fig.suptitle("                            Dynamic system", fontweight="bold", fontsize=14)
 fig.tight_layout()
-plt.savefig("/scratch/figures/corr_eff_dyn.png", dpi=300)
+plt.savefig(FIGURES_DIR / "corr_eff_dyn.png", dpi=300)
 
 
 # ### 95% CONFIDENCE INTERVALS
