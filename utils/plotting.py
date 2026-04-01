@@ -1,7 +1,6 @@
 import networkx as nx
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 
 def plot_bar_from_dict(confounder, axes_cell, values_dict, node_key, methods_list, xticklabels, title):
@@ -18,8 +17,10 @@ def plot_bar_from_dict(confounder, axes_cell, values_dict, node_key, methods_lis
         df_list.append(df)
 
     plot_df = pd.concat(df_list, axis=1)
-    sns.barplot(plot_df, yerr=yerr_list, ax=axes_cell)
+    means = [plot_df[method].mean() for method in methods_list]
+    axes_cell.bar(range(len(methods_list)), means, yerr=yerr_list)
     axes_cell.set_title(title, fontweight="bold", fontsize=11)
+    axes_cell.set_xticks(range(len(methods_list)))
     axes_cell.set_xticklabels(xticklabels, fontsize=10)
 
 

@@ -25,12 +25,12 @@ Performance is evaluated using mean squared error (MSE) and Spearman correlation
 
 ```
 ├── simulated/          # Simulation analyses
-│   ├── simulations_non_dynamic.py/.ipynb     # Non-dynamic system simulations
-│   ├── simulations_dynamic.py/.ipynb         # Dynamic system simulations
-│   ├── topologies_non-dynamic.py/.ipynb      # Topology figures (non-dynamic)
-│   ├── topologies_dynamic.py/.ipynb          # Topology figures (dynamic)
-│   ├── copy_topology_non-dyn.py/.ipynb       # Copy topology analysis
-│   └── combined_mse_corr_figs.py/.ipynb      # Combined MSE and correlation figures
+│   ├── simulations_non_dynamic.py     # Non-dynamic system simulations
+│   ├── simulations_dynamic.py         # Dynamic system simulations
+│   ├── topologies_non-dynamic.ipynb   # Topology figures (non-dynamic)
+│   ├── topologies_dynamic.py          # Topology figures (dynamic)
+│   ├── copy_topology_non-dyn.py       # Copy topology analysis
+│   └── combined_mse_corr_figs.py      # Combined MSE and correlation figures
 │
 ├── experimental/       # Real EEG data analyses (MPI-LEMON dataset)
 │   ├── metrics-py-file/                      # Connectivity metric computation scripts
@@ -45,8 +45,8 @@ Performance is evaluated using mean squared error (MSE) and Spearman correlation
 │   └── mean-EC-EO/                           # Mean connectivity: Eyes Closed vs. Eyes Open
 │
 ├── introduction/       # Introductory figures
-│   ├── confounders_fig.py/.ipynb             # Confounder schematic diagrams
-│   └── corr_matrices.py/.ipynb               # Correlation matrix figures
+│   ├── confounders_fig.py             # Confounder schematic diagrams
+│   └── corr_matrices.py               # Correlation matrix figures
 │
 └── figures/            # Generated output figures
 ```
@@ -58,6 +58,18 @@ Simulated three-node networks (100 s, 250 Hz, sinusoidal signals with additive n
 ## Experimental Data
 
 Real EEG analyses use the [MPI-LEMON](https://fcon_1000.projects.nitrc.org/indi/retro/MPI_LEMON.html) resting-state dataset (Eyes Closed and Eyes Open conditions). Source-space connectivity is computed using sLORETA inverse solutions and parcellated using the Desikan-Killiany atlas.
+
+## Installation
+
+Clone the repository and install the package in editable mode:
+
+```bash
+git clone <repo-url>
+cd eeg_connectivity_manuscript
+pip install -e .
+```
+
+This registers the `utils` package so that all scripts can be run from any directory without import errors.
 
 ## Dependencies
 
