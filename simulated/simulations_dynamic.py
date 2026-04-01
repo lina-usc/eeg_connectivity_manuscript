@@ -99,13 +99,13 @@ plot_bar_from_dict("common_input", axes[3][0], mse_dict, "non-zero_2_1",
 
 plot_bar_from_dict("indirect_connections", axes[1][1], mse_dict, "non-zero_1_0",
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"],
-                   "Node y1 ↔ Node y0 \n (non-zero)")
+                   "Node $y_1$ ↔ Node $y_0$ \n (non-zero)")
 plot_bar_from_dict("indirect_connections", axes[2][1], mse_dict, "zero_2_0",
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"],
-                   "Node y2 ↔ Node y0 \n (zero)")
+                   "Node $y_2$ ↔ Node $y_0$ \n (zero)")
 plot_bar_from_dict("indirect_connections", axes[3][1], mse_dict, "non-zero_2_1",
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"],
-                   "Node y2 ↔ Node y1 \n (non-zero)")
+                   "Node $y_2$ ↔ Node $y_1$ \n (non-zero)")
 
 plot_bar_from_dict("volume_conduction", axes[1][2], mse_dict, "zero_1_0",
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"], "(zero)")
@@ -153,22 +153,22 @@ plot_bar_from_dict("common_input", axes[6][0], mse_dict, 'non-zero_2_1',
 
 plot_bar_from_dict("indirect_connections", axes[1][1], mse_dict, 'non-zero_1_0',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y1 → Node y0 \n (non-zero)")
+                   "Node $y_1$ → Node $y_0$ \n (non-zero)")
 plot_bar_from_dict("indirect_connections", axes[2][1], mse_dict, 'zero_0_1',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y0 → Node y1 \n (zero)")
+                   "Node $y_0$ → Node $y_1$ \n (zero)")
 plot_bar_from_dict("indirect_connections", axes[3][1], mse_dict, 'zero_0_2',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y0 → Node y2 \n (zero)")
+                   "Node $y_0$ → Node $y_2$ \n (zero)")
 plot_bar_from_dict("indirect_connections", axes[4][1], mse_dict, 'zero_2_0',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y2 → Node y0 \n (zero)")
+                   "Node $y_2$ → Node $y_0$ \n (zero)")
 plot_bar_from_dict("indirect_connections", axes[5][1], mse_dict, 'zero_1_2',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y1 → Node y2 \n (zero)")
+                   "Node $y_1$ → Node $y_2$ \n (zero)")
 plot_bar_from_dict("indirect_connections", axes[6][1], mse_dict, 'non-zero_2_1',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y2 → Node y1 \n (non-zero)")
+                   "Node $y_2$ → Node $y_1$ \n (non-zero)")
 
 plot_bar_from_dict("volume_conduction", axes[1][2], mse_dict, 'zero_1_0',
                    directed_methods, ["gPDC", "dDTF", "pSGP"], "(zero)")
@@ -195,19 +195,19 @@ fig, axes = plt.subplots(5, 1, figsize=(4, 9))
 
 plot_bar_from_dict("common_input", axes[0], corr_coef_dict, 'non-zero_2_0',
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"],
-                   "Node y2 ↔ Node y0 \n (non-zero)")
+                   "Node $y_2$ ↔ Node $y_0$ \n (non-zero)")
 plot_bar_from_dict("common_input", axes[1], corr_coef_dict, 'non-zero_2_1',
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"],
-                   "Node y2 ↔ Node y1 \n (non-zero)")
+                   "Node $y_2$ ↔ Node $y_1$ \n (non-zero)")
 plot_bar_from_dict("indirect_connections", axes[2], corr_coef_dict, 'non-zero_1_0',
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"],
-                   "Node y1 ↔ Node y0 \n (non-zero)")
+                   "Node $y_1$ ↔ Node $y_0$ \n (non-zero)")
 plot_bar_from_dict("indirect_connections", axes[3], corr_coef_dict, 'non-zero_2_1',
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"],
-                   "Node y2 ↔ Node y1 \n(non-zero)")
+                   "Node $y_2$ ↔ Node $y_1$ \n(non-zero)")
 plot_bar_from_dict("volume_conduction", axes[4], corr_coef_dict, 'non-zero_2_0',
                    undirected_methods, ["Coh", "ciPLV", "imCoh", "dwPLI"],
-                   "Node y2 ↔ Node y0 \n (non-zero)")
+                   "Node $y_2$ ↔ Node $y_0$ \n (non-zero)")
 
 axes[0].set_ylabel('Common Input', rotation='horizontal', fontsize=10, loc='top')
 axes[2].set_ylabel('Indirect connections', rotation='horizontal', fontsize=10, loc='top')
@@ -224,19 +224,19 @@ fig, axes = plt.subplots(5, 1, figsize=(4, 9))
 
 plot_bar_from_dict("common_input", axes[0], corr_coef_dict, 'non-zero_2_0',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y2 → Node y0 \n (non-zero)")
+                   "Node $y_2$ → Node $y_0$ \n (non-zero)")
 plot_bar_from_dict("common_input", axes[1], corr_coef_dict, 'non-zero_2_1',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y2 → Node y1 \n (non-zero)")
+                   "Node $y_2$ → Node $y_1$ \n (non-zero)")
 plot_bar_from_dict("indirect_connections", axes[2], corr_coef_dict, 'non-zero_1_0',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y1 → Node y0 \n (non-zero)")
+                   "Node $y_1$ → Node $y_0$ \n (non-zero)")
 plot_bar_from_dict("indirect_connections", axes[3], corr_coef_dict, 'non-zero_2_1',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y2 → Node y1 \n(non-zero)")
+                   "Node $y_2$ → Node $y_1$ \n(non-zero)")
 plot_bar_from_dict("volume_conduction", axes[4], corr_coef_dict, 'non-zero_2_0',
                    directed_methods, ["gPDC", "dDTF", "pSGP"],
-                   "Node y2 → Node y0 \n (non-zero)")
+                   "Node $y_2$ → Node $y_0$ \n (non-zero)")
 
 axes[0].set_ylabel('Common Input', rotation='horizontal', fontsize=10, loc='top')
 axes[2].set_ylabel('Indirect connections', rotation='horizontal', fontsize=10, loc='top')

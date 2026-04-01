@@ -44,5 +44,6 @@ def draw_confounder_network(ax, G, pos, edge_list_1, edge_list_2, arc_rad,
                            connectionstyle=f'arc3, rad = {arc_rad}', alpha=alpha_2, arrowsize=25)
     nx.draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=edge_labels, font_color='red')
     nx.draw_networkx_nodes(G, pos, ax=ax, node_color='orange', alpha=1.0)
-    nx.draw_networkx_labels(G, pos, ax=ax)
+    latex_labels = {n: f'$y_{n[-1]}$' for n in G.nodes()}
+    nx.draw_networkx_labels(G, pos, ax=ax, labels=latex_labels)
     ax.set_title(title, fontsize=12, fontweight="bold")

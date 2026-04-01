@@ -72,48 +72,48 @@ def simulate_confounder(confounder):
     snr3 = g3/alpha3
 
     #phase
-    phase_3_1 = np.random.uniform(0,2)*np.pi
-    phase_3_2 = np.random.uniform(0,2)*np.pi
-    phase_1_2 = np.random.uniform(0,2)*np.pi
+    phase_2_0 = np.random.uniform(0,2)*np.pi
+    phase_2_1 = np.random.uniform(0,2)*np.pi
+    phase_0_1 = np.random.uniform(0,2)*np.pi
 
     #delays in seconds
-    tau3_1 = phase_3_1/(2*np.pi*f1) #from 3 to 1
-    tau3_2 = phase_3_2/(2*np.pi*f2) #from 3 to 2
-    tau1_2 = phase_1_2/(2*np.pi*f3) #from 1 to 2
-    
+    tau2_0 = phase_2_0/(2*np.pi*f1) #from 2 to 0
+    tau2_1 = phase_2_1/(2*np.pi*f2) #from 2 to 1
+    tau0_1 = phase_0_1/(2*np.pi*f3) #from 0 to 1
+
     #Time lags in samples
-    lag3_1 = np.int64(np.round(tau3_1*f1))
-    lag3_2 = np.int64(np.round(tau3_2*f2))
-    lag1_2 = np.int64(np.round(tau1_2*f3))
+    lag2_0 = np.int64(np.round(tau2_0*f1))
+    lag2_1 = np.int64(np.round(tau2_1*f2))
+    lag0_1 = np.int64(np.round(tau0_1*f3))
 
     
     #c values
-    coefficient_dict = {'common_input':{'c_3_1': 1, 'c_3_2':1, 'c_1_2':0},
-                        'indirect_connections':{'c_3_1': 1, 'c_3_2':0, 'c_1_2':1},
-                        'volume_conduction':{'c_3_1': 0, 'c_3_2': 0, 'c_1_2':0}}
+    coefficient_dict = {'common_input':{'c_2_0': 1, 'c_2_1':1, 'c_0_1':0},
+                        'indirect_connections':{'c_2_0': 1, 'c_2_1':0, 'c_0_1':1},
+                        'volume_conduction':{'c_2_0': 0, 'c_2_1': 0, 'c_0_1':0}}
 
-    c_3_1 = coefficient_dict[confounder]['c_3_1']
-    c_3_2 = coefficient_dict[confounder]['c_3_2']
-    c_1_2 = coefficient_dict[confounder]['c_1_2']
-    
+    c_2_0 = coefficient_dict[confounder]['c_2_0']
+    c_2_1 = coefficient_dict[confounder]['c_2_1']
+    c_0_1 = coefficient_dict[confounder]['c_0_1']
+
+    y0 = np.zeros(len(time))
     y1 = np.zeros(len(time))
     y2 = np.zeros(len(time))
-    y3 = np.zeros(len(time))
 
     for i in np.arange(2, len(time)):
-        y3[i] = rho3*y3[i-1]-((rho3**2)*y3[i-2])+noise3[i]*snr3
-        y1[i] = rho1*y1[i-1]-((rho1**2)*y1[i-2])- ((c_3_1)*y3[i-1]) +noise1[i]*snr1
-        y2[i] = rho2*y2[i-1]-((rho2**2)*(y2[i-2]))- (c_1_2*(y1[i-3])) -(c_3_2*(y3[i-2]))+noise2[i]*snr2
+        y2[i] = rho3*y2[i-1]-((rho3**2)*y2[i-2])+noise3[i]*snr3
+        y0[i] = rho1*y0[i-1]-((rho1**2)*y0[i-2])- ((c_2_0)*y2[i-1]) +noise1[i]*snr1
+        y1[i] = rho2*y1[i-1]-((rho2**2)*(y1[i-2]))- (c_0_1*(y0[i-3])) -(c_2_1*(y2[i-2]))+noise2[i]*snr2
 
     if confounder == 'volume_conduction':
         L = np.random.uniform(-1,1,size=(3,3))
     else:
         L = np.identity(3)
-    
 
-    z1, z2, z3 = L @ np.array([y1, y2, y3])
 
-    return[z1, z2, z3]
+    z0, z1, z2 = L @ np.array([y0, y1, y2])
+
+    return[z0, z1, z2]
 
 
 # In[2]:
@@ -121,7 +121,7 @@ def simulate_confounder(confounder):
 
 def simulated_raw(signals):
     sim_data = np.array(signals)
-    info = mne.create_info(ch_names=["y1", "y2", "y3"], ch_types=["eeg"]*3, sfreq=250)
+    info = mne.create_info(ch_names=["y0", "y1", "y2"], ch_types=["eeg"]*3, sfreq=250)
     simulated_raw = mne.io.RawArray(sim_data, info)
     return simulated_raw
 

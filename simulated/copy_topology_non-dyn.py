@@ -32,8 +32,8 @@ for confounder in confounder_list:
 
 print(edge_lists_undirected)
 
-edge_list_1 = [('Y0', 'Y1', {'w': 'A1'}), ('Y1', 'Y2', {'w': 'B1'}), ('Y0', 'Y2', {'w': 'C1'})]
-edge_list_2 = [('Y1', 'Y0', {'w': 'A2'}), ('Y2', 'Y1', {'w': 'B2'}), ('Y2', 'Y0', {'w': 'C2'})]
+edge_list_1 = [('y0', 'y1', {'w': 'A1'}), ('y1', 'y2', {'w': 'B1'}), ('y0', 'y2', {'w': 'C1'})]
+edge_list_2 = [('y1', 'y0', {'w': 'A2'}), ('y2', 'y1', {'w': 'B2'}), ('y2', 'y0', {'w': 'C2'})]
 
 
 def _draw_topology_panel(axes, confounder, alpha_gt_1, alpha_gt_2, gt_edge_labels,
@@ -52,11 +52,12 @@ def _draw_topology_panel(axes, confounder, alpha_gt_1, alpha_gt_2, gt_edge_label
     nx.draw_networkx_edge_labels(G, pos, ax=axes[0], edge_labels=gt_edge_labels,
                                  font_color='red')
     nx.draw_networkx_nodes(G, pos, ax=axes[0], node_color='orange', alpha=1.0)
-    nx.draw_networkx_labels(G, pos, ax=axes[0])
+    _latex = {'y0': '$y_0$', 'y1': '$y_1$', 'y2': '$y_2$'}
+    nx.draw_networkx_labels(G, pos, ax=axes[0], labels=_latex)
 
-    undirected_edge_list = [('Y0', 'Y1', {'w': 'A1'}),
-                            ('Y1', 'Y2', {'w': 'B1'}),
-                            ('Y0', 'Y2', {'w': 'C1'})]
+    undirected_edge_list = [('y0', 'y1', {'w': 'A1'}),
+                            ('y1', 'y2', {'w': 'B1'}),
+                            ('y0', 'y2', {'w': 'C1'})]
     for ax_idx, method in zip(range(1, len(methods) + 1), methods):
         G2 = nx.DiGraph()
         G2.add_edges_from(undirected_edge_list)
@@ -68,13 +69,13 @@ def _draw_topology_panel(axes, confounder, alpha_gt_1, alpha_gt_2, gt_edge_label
                                arrowstyle='<->')
         nx.draw_networkx_edge_labels(G2, pos2, ax=axes[ax_idx],
                                      edge_labels={
-                                         ('Y0', 'Y1'): alpha[0],
-                                         ('Y1', 'Y2'): alpha[1],
-                                         ('Y0', 'Y2'): alpha[2],
+                                         ('y0', 'y1'): alpha[0],
+                                         ('y1', 'y2'): alpha[1],
+                                         ('y0', 'y2'): alpha[2],
                                      }, font_color='red')
         nx.draw_networkx_nodes(G2, pos2, ax=axes[ax_idx],
                                node_color='grey', alpha=1.0)
-        nx.draw_networkx_labels(G2, pos2, ax=axes[ax_idx])
+        nx.draw_networkx_labels(G2, pos2, ax=axes[ax_idx], labels=_latex)
 
     labels = ['Ground truth'] + list(node_names)
     for ax, label in zip(axes, labels):
@@ -87,7 +88,7 @@ fig, axes = plt.subplots(5, 1, figsize=(3, 8))
 _draw_topology_panel(
     axes, 'common_input',
     alpha_gt_1=[0, 0, 0], alpha_gt_2=[0, 1, 1],
-    gt_edge_labels={('Y1', 'Y0'): 0, ('Y2', 'Y1'): 1, ('Y2', 'Y0'): 1},
+    gt_edge_labels={('y1', 'y0'): 0, ('y2', 'y1'): 1, ('y2', 'y0'): 1},
     edge_lists=edge_lists_undirected, methods=undirected_methods,
     node_names=['coh', 'ciPLV', 'imcoh', 'dwPLI'],
 )
@@ -102,7 +103,7 @@ fig, axes = plt.subplots(5, 1, figsize=(3, 8))
 _draw_topology_panel(
     axes, 'indirect_connections',
     alpha_gt_1=[0, 0, 0], alpha_gt_2=[1, 1, 0],
-    gt_edge_labels={('Y1', 'Y0'): 1, ('Y2', 'Y1'): 1, ('Y2', 'Y0'): 0},
+    gt_edge_labels={('y1', 'y0'): 1, ('y2', 'y1'): 1, ('y2', 'y0'): 0},
     edge_lists=edge_lists_undirected, methods=undirected_methods,
     node_names=['coh', 'ciPLV', 'imcoh', 'dwPLI'],
 )
@@ -116,15 +117,16 @@ plt.savefig('topo_func_ind_non_dyn.png', dpi=300)
 fig, axes = plt.subplots(5, 1, figsize=(3, 8))
 
 G_vc = nx.Graph()
-vc_edge_list = [('Y0', 'Y1', {'w': 'A1'}), ('Y1', 'Y2', {'w': 'B1'}), ('Y0', 'Y2', {'w': 'C1'})]
+vc_edge_list = [('y0', 'y1', {'w': 'A1'}), ('y1', 'y2', {'w': 'B1'}), ('y0', 'y2', {'w': 'C1'})]
 G_vc.add_edges_from(vc_edge_list)
 pos_vc = nx.shell_layout(G_vc, rotate=np.pi / 2, scale=0.1)
 nx.draw_networkx_edges(G_vc, pos_vc, ax=axes[0], edgelist=vc_edge_list, alpha=[0, 0, 0])
 nx.draw_networkx_edge_labels(G_vc, pos_vc, ax=axes[0],
-                              edge_labels={('Y1', 'Y0'): 0, ('Y2', 'Y1'): 0, ('Y2', 'Y0'): 1},
+                              edge_labels={('y1', 'y0'): 0, ('y2', 'y1'): 0, ('y2', 'y0'): 1},
                               font_color='red')
 nx.draw_networkx_nodes(G_vc, pos_vc, ax=axes[0], node_color='orange', alpha=1.0)
-nx.draw_networkx_labels(G_vc, pos_vc, ax=axes[0])
+_latex = {'y0': '$y_0$', 'y1': '$y_1$', 'y2': '$y_2$'}
+nx.draw_networkx_labels(G_vc, pos_vc, ax=axes[0], labels=_latex)
 
 for ax_idx, method in zip(range(1, 5), undirected_methods):
     G2 = nx.DiGraph()
@@ -136,12 +138,12 @@ for ax_idx, method in zip(range(1, 5), undirected_methods):
                            alpha=alpha, arrowstyle='<->')
     nx.draw_networkx_edge_labels(G2, pos2, ax=axes[ax_idx],
                                  edge_labels={
-                                     ('Y0', 'Y1'): alpha[0],
-                                     ('Y1', 'Y2'): alpha[1],
-                                     ('Y0', 'Y2'): alpha[2],
+                                     ('y0', 'y1'): alpha[0],
+                                     ('y1', 'y2'): alpha[1],
+                                     ('y0', 'y2'): alpha[2],
                                  }, font_color='red')
     nx.draw_networkx_nodes(G2, pos2, ax=axes[ax_idx], node_color='grey', alpha=1.0)
-    nx.draw_networkx_labels(G2, pos2, ax=axes[ax_idx])
+    nx.draw_networkx_labels(G2, pos2, ax=axes[ax_idx], labels=_latex)
 
 axes[0].set_title('Non-dynamic system')
 for ax, label in zip(axes, ['Ground truth', 'coh', 'ciPLV', 'imcoh', 'dwPLI']):
